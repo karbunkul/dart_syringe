@@ -1,0 +1,12 @@
+name: syringe_example
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.0.6
+
+
+dependencies:
+  syringe:
+    path: ../
