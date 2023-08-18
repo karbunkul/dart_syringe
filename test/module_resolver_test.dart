@@ -78,6 +78,24 @@ void main() {
 
     resolveTest(
       [
+        TestModule<A>(),
+        TestModule<B>(),
+        TestModule<C>(deps: [B]),
+      ],
+      [B, A, C],
+    );
+
+    resolveTest(
+      [
+        TestModule<A>(deps: [C]),
+        TestModule<B>(),
+        TestModule<C>(deps: [B]),
+      ],
+      [B, C, A],
+    );
+
+    resolveTest(
+      [
         TestModule<C>(deps: [A]),
         TestModule<A>(),
         TestModule<B>(deps: [A]),

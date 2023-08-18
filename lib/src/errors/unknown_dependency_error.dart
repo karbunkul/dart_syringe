@@ -1,12 +1,16 @@
 part of 'errors.dart';
 
 class SyringeUnknownDependencyError extends SyringeError {
+  final Type dependency;
   final Type module;
 
-  SyringeUnknownDependencyError(this.module);
+  SyringeUnknownDependencyError({
+    required this.dependency,
+    required this.module,
+  });
 
   @override
   String toString() {
-    return 'Module $module not registered';
+    return 'Module $dependency not registered ($module)';
   }
 }

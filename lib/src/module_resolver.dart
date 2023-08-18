@@ -39,7 +39,7 @@ final class ModuleResolver {
 
       result.putIfAbsent(
         module.typeOf(),
-        () => module.hasDependencies ? 5 : 1000,
+        () => module.hasDependencies ? 5 : 10000,
       );
     }
 
@@ -70,7 +70,10 @@ final class ModuleResolver {
       final depModule = modules.firstWhere((element) {
         return element.typeOf() == dep;
       }, orElse: () {
-        throw SyringeUnknownDependencyError(dep);
+        throw SyringeUnknownDependencyError(
+          dependency: dep,
+          module: module.runtimeType,
+        );
       });
 
       if (depModule.hasDependencies) {

@@ -2,11 +2,13 @@ part of 'errors.dart';
 
 class SyringeMissingDependencyError extends SyringeError {
   final Type dependency;
+  final Type? module;
 
-  SyringeMissingDependencyError(this.dependency);
+  SyringeMissingDependencyError({required this.dependency, this.module});
 
   @override
   String toString() {
-    return 'Dependency $dependency is missing';
+    final moduleStr = module != null ? ' ($module)' : '';
+    return 'Dependency $dependency is missing$moduleStr';
   }
 }

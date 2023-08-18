@@ -9,7 +9,7 @@ final class InjectContext {
 
   T deps<T>() {
     if (!_deps.containsKey(T)) {
-      throw SyringeMissingDependencyError(T);
+      throw SyringeMissingDependencyError(dependency: T);
     }
 
     return _deps[T];
