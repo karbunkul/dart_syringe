@@ -4,8 +4,8 @@ import 'package:syringe/syringe.dart';
 
 Future<void> main() async {
   final modules = const <Module>[
-    FooModule(),
     BarModule(),
+    FooModule(),
   ];
 
   final injector = Injector<Dependency>(
