@@ -9,6 +9,8 @@ abstract base class Module<T> {
 
   List<Type> deps() => [];
 
+  bool internal() => false;
+
   Type typeOf() => T;
 
   bool get hasDependencies => deps().isNotEmpty;

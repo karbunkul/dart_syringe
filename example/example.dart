@@ -11,18 +11,16 @@ Future<void> main() async {
   final injector = Injector<Dependency>(
     modules: modules,
     onProgress: (info) {
-      final messages = <Type, String>{
-        Foo: 'Module foo, no dependencies',
-        Bar: 'Module bar, have one dependency',
-      };
+      if (info.phase == ProgressPhase.done) {
+        final ProgressInfo(:total, :type, :current, :percent) = info;
+        final percentStr = percent.toString().padLeft(3);
+        final internalStr = info.internal ? 'internal' : '';
 
-      final phaseStr = info.phase.toString().split('.').last;
-      final ProgressInfo(:total, :type, :current, :percent) = info;
-      final percentStr = percent.toString().padLeft(3);
-      final message = messages[type] ?? '';
-      print('[$percentStr %] $current of $total ($type: $phaseStr) $message');
+        print('[$percentStr %] $current of $total ($type) $internalStr');
+      }
     },
     onInject: (deps) {
+      deps<Bar>();
       return Dependency(foo: deps<Foo>());
     },
   );
@@ -74,4 +72,7 @@ final class BarModule extends Module<Bar> {
 
   @override
   List<Type> deps() => [Foo];
+
+  @override
+  bool internal() => true;
 }

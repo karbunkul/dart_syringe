@@ -21,6 +21,7 @@ final class Injector<T> {
     final Deps deps = {};
     int current = 0;
     final total = modules.length;
+
     for (final module in newModules) {
       try {
         final moduleId = module.typeOf();
@@ -29,9 +30,13 @@ final class Injector<T> {
           current: current,
           type: moduleId,
           phase: ProgressPhase.init,
+          internal: module.internal(),
         );
 
-        final context = _injectContext(module: module, deps: deps);
+        final context = InjectContext(
+          deps: deps,
+          dependencies: module.deps(),
+        );
         onProgress?.call(progress);
         final factory = await module.factory(context.deps);
         deps.putIfAbsent(moduleId, () => factory);
@@ -51,18 +56,29 @@ final class Injector<T> {
       }
     }
 
-    final ctx = InjectContext(deps: deps);
+    final ctx = InjectContext(
+      deps: deps,
+      internal: internalModules(),
+    );
 
-    return onInject(ctx.deps);
+    try {
+      return onInject(ctx.deps);
+    } on SyringeDependencyExportError catch (err, stackTrace) {
+      final module = modules.firstWhere((element) {
+        return element.typeOf() == err.dependency;
+      });
+
+      throw Error.throwWithStackTrace(
+        SyringeDependencyExportError(
+          dependency: err.dependency,
+          module: module.runtimeType,
+        ),
+        stackTrace,
+      );
+    }
   }
 
-  InjectContext _injectContext({required Module module, required Deps deps}) {
-    final Deps newDeps = module.deps().fold({}, (acc, cur) {
-      acc.putIfAbsent(cur, () => deps[cur]);
-
-      return acc;
-    });
-
-    return InjectContext(deps: newDeps);
+  List<Type> internalModules() {
+    return modules.where((e) => e.internal()).map((e) => e.typeOf()).toList();
   }
 }
