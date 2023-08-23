@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:syringe/syringe.dart';
 
 Future<void> main() async {
-  final modules = const <Module>[
+  final modules = <Module>[
+    ExportModule<Foo>(
+      onInject: (deps) => Foo(bar: deps<Bar>()),
+      dependencies: [Bar],
+    ),
     BarModule(),
-    FooModule(),
   ];
 
   final injector = Injector<Dependency>(
@@ -14,7 +17,7 @@ Future<void> main() async {
       if (info.phase == ProgressPhase.done) {
         final ProgressInfo(:total, :type, :current, :percent) = info;
         final percentStr = percent.toString().padLeft(3);
-        final internalStr = info.internal ? 'internal' : '';
+        final internalStr = info.export ? 'export' : '';
 
         print('[$percentStr %] $current of $total ($type) $internalStr');
       }
@@ -27,7 +30,7 @@ Future<void> main() async {
 
   final dependency = await injector.inject();
 
-  print(dependency.foo.title);
+  print(dependency.foo.bar.title);
 }
 
 class Dependency {
@@ -36,29 +39,16 @@ class Dependency {
   const Dependency({required this.foo});
 }
 
-class Foo {
+class Bar {
   final String title;
 
-  Foo({required this.title});
+  Bar({required this.title});
 }
 
-class Bar {
-  final Foo foo;
+class Foo {
+  final Bar bar;
 
-  const Bar({required this.foo});
-}
-
-final class FooModule extends Module<Foo> {
-  const FooModule();
-
-  @override
-  FutureOr<Foo> factory(_) async {
-    await Future.delayed(Duration(seconds: 1));
-    return Foo(title: 'hello world');
-  }
-
-  @override
-  List<Type> deps() => [];
+  const Foo({required this.bar});
 }
 
 final class BarModule extends Module<Bar> {
@@ -67,12 +57,11 @@ final class BarModule extends Module<Bar> {
   @override
   FutureOr<Bar> factory(deps) async {
     await Future.delayed(Duration(seconds: 1));
-    return Bar(foo: deps<Foo>());
+    return Bar(title: 'Hello World');
   }
 
   @override
-  List<Type> deps() => [Foo];
-
-  @override
-  bool internal() => true;
+  bool export() {
+    return true;
+  }
 }

@@ -4,7 +4,7 @@ final class ProgressInfo {
   final int total;
   final int current;
   final Type type;
-  final bool internal;
+  final bool export;
   final ProgressPhase phase;
 
   ProgressInfo({
@@ -12,7 +12,7 @@ final class ProgressInfo {
     required this.current,
     required this.type,
     required this.phase,
-    required this.internal,
+    required this.export,
   });
 
   bool get isDone => total == current;
@@ -22,7 +22,7 @@ final class ProgressInfo {
   ProgressInfo copyWith({int? current, Type? type, ProgressPhase? phase}) {
     return ProgressInfo(
       total: total,
-      internal: internal,
+      export: export,
       current: current ?? this.current,
       type: type ?? this.type,
       phase: phase ?? this.phase,

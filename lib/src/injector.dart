@@ -30,11 +30,12 @@ final class Injector<T> {
           current: current,
           type: moduleId,
           phase: ProgressPhase.init,
-          internal: module.internal(),
+          export: module.export(),
         );
 
         final context = InjectContext(
           deps: deps,
+          mode: InjectMode.module,
           dependencies: module.deps(),
         );
         onProgress?.call(progress);
@@ -58,7 +59,8 @@ final class Injector<T> {
 
     final ctx = InjectContext(
       deps: deps,
-      internal: internalModules(),
+      mode: InjectMode.inject,
+      dependencies: exportModules(),
     );
 
     try {
@@ -78,7 +80,7 @@ final class Injector<T> {
     }
   }
 
-  List<Type> internalModules() {
-    return modules.where((e) => e.internal()).map((e) => e.typeOf()).toList();
+  List<Type> exportModules() {
+    return modules.where((e) => e.export()).map((e) => e.typeOf()).toList();
   }
 }
