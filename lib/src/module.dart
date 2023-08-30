@@ -14,6 +14,19 @@ abstract base class Module<T> {
   Type typeOf() => T;
 
   bool get hasDependencies => deps().isNotEmpty;
+
+  @override
+  bool operator ==(Object other) {
+    return other is Module<T> &&
+        export() == other.export() &&
+        deps().toString() == other.deps().toString();
+  }
+
+  @override
+  int get hashCode {
+    final exportWeight = export() ? 1000 : 100;
+    return T.toString().length + exportWeight + deps().toString().length;
+  }
 }
 
 final class ExportModule<T> extends Module<T> {

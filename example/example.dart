@@ -3,6 +3,19 @@ import 'dart:async';
 import 'package:syringe/syringe.dart';
 
 Future<void> main() async {
+  final module1 = ExportModule<Foo>(
+    onInject: (deps) => Foo(bar: deps<Bar>()),
+    dependencies: [Bar, Foo],
+  );
+
+  final module2 = ExportModule<Foo>(
+    onInject: (deps) => Foo(bar: deps<Bar>()),
+    dependencies: [Bar, Foo],
+  );
+
+  print(identical(module1, module2));
+  return;
+
   final modules = <Module>[
     ExportModule<Foo>(
       onInject: (deps) => Foo(bar: deps<Bar>()),
@@ -23,7 +36,6 @@ Future<void> main() async {
       }
     },
     onInject: (deps) {
-      deps<Bar>();
       return Dependency(foo: deps<Foo>());
     },
   );
@@ -62,6 +74,6 @@ final class BarModule extends Module<Bar> {
 
   @override
   bool export() {
-    return true;
+    return false;
   }
 }
