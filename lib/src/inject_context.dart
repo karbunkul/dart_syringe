@@ -25,19 +25,13 @@ final class InjectContext {
       if (dependencies.isEmpty || !dependencies.contains(T)) {
         throw SyringeMissingDependencyError(dependency: T);
       }
-    } else {
-      if (dependencies.isNotEmpty && !dependencies.contains(T)) {
+    }
+
+    if (mode == InjectMode.inject) {
+      if (!dependencies.contains(T)) {
         throw throw SyringeDependencyExportError(dependency: T);
       }
     }
-
-    // if (dependencies.isNotEmpty && !dependencies.contains(T)) {
-    //   if (mode == InjectMode.inject) {
-    //     throw throw SyringeDependencyExportError(dependency: T);
-    //   } else {
-    //
-    //   }
-    // }
 
     return _deps[T];
   }
