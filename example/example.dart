@@ -60,7 +60,5 @@ final class BarModule extends Module<Bar> {
   }
 
   @override
-  bool export() {
-    return false;
-  }
+  bool get export => false;
 }

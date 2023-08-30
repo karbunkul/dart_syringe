@@ -30,13 +30,13 @@ final class Injector<T> {
           current: current,
           type: moduleId,
           phase: ProgressPhase.init,
-          export: module.export(),
+          export: module.export,
         );
 
         final context = InjectContext(
           deps: deps,
           mode: InjectMode.module,
-          dependencies: module.deps(),
+          dependencies: module.deps,
         );
         onProgress?.call(progress);
         final factory = await module.factory(context.deps);
@@ -81,6 +81,6 @@ final class Injector<T> {
   }
 
   List<Type> exportModules() {
-    return modules.where((e) => e.export()).map((e) => e.typeOf()).toList();
+    return modules.where((e) => e.export).map((e) => e.typeOf()).toList();
   }
 }

@@ -25,7 +25,7 @@ final class TestModule<T> extends Module<T> {
   const TestModule({List<Type>? deps}) : _deps = deps ?? const [];
 
   @override
-  List<Type> deps() => _deps;
+  List<Type> get deps => _deps;
 
   @override
   FutureOr<T> factory(_) {

@@ -7,25 +7,25 @@ abstract base class Module<T> {
 
   FutureOr<T> factory(DepsCallback deps);
 
-  List<Type> deps() => [];
+  List<Type> get deps => [];
 
-  bool export() => false;
+  bool get export => false;
 
   Type typeOf() => T;
 
-  bool get hasDependencies => deps().isNotEmpty;
+  bool get hasDependencies => deps.isNotEmpty;
 
   @override
   bool operator ==(Object other) {
     return other is Module<T> &&
-        export() == other.export() &&
-        deps().toString() == other.deps().toString();
+        export == other.export &&
+        deps.toString() == other.deps.toString();
   }
 
   @override
   int get hashCode {
-    final exportWeight = export() ? 1000 : 100;
-    return T.toString().length + exportWeight + deps().toString().length;
+    final exportWeight = export ? 1000 : 100;
+    return T.toString().length + exportWeight + deps.toString().length;
   }
 }
 
@@ -38,10 +38,10 @@ final class ExportModule<T> extends Module<T> {
   FutureOr<T> factory(DepsCallback deps) => onInject(deps);
 
   @override
-  List<Type> deps() => dependencies ?? [];
+  List<Type> get deps => dependencies ?? [];
 
   @override
-  bool export() => true;
+  bool get export => true;
 }
 
 final class ProxyModule<T> extends Module<T> {
@@ -53,8 +53,8 @@ final class ProxyModule<T> extends Module<T> {
   FutureOr<T> factory(DepsCallback deps) => onInject(deps);
 
   @override
-  List<Type> deps() => dependencies ?? [];
+  List<Type> get deps => dependencies ?? [];
 
   @override
-  bool export() => false;
+  bool get export => false;
 }

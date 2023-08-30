@@ -34,7 +34,7 @@ void main() {
     expect(module1.hashCode, equals(module2.hashCode));
     expect(module1 == module2, equals(true));
     expect(module3 != module4, equals(true));
-    expect(module1.export(), equals(true));
-    expect(module3.export(), equals(false));
+    expect(module1.export, equals(true));
+    expect(module3.export, equals(false));
   });
 }

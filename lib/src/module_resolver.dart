@@ -61,7 +61,7 @@ final class ModuleResolver {
     source ??= module;
     final sourceId = source.typeOf();
 
-    for (final dep in module.deps()) {
+    for (final dep in module.deps) {
       if (dependencies.contains(sourceId)) {
         throw SyringeCycleDependencyError(module: sourceId);
       }
