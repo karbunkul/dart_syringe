@@ -64,7 +64,7 @@ final class Injector<T> {
     );
 
     try {
-      return onInject(ctx.deps);
+      return await onInject(ctx.deps);
     } on SyringeDependencyExportError catch (err, stackTrace) {
       final module = modules.firstWhere((element) {
         return element.typeOf() == err.dependency;
