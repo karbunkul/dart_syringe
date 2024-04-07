@@ -1,12 +1,15 @@
 part of 'errors.dart';
 
+/// Error indicating a cyclic dependency during dependency injection.
 class SyringeCycleDependencyError extends SyringeError {
+  /// The type of the module where the cyclic dependency occurred.
   final Type module;
 
-  SyringeCycleDependencyError({required this.module});
+  /// Constructor for SyringeCycleDependencyError.
+  SyringeCycleDependencyError({
+    required this.module,
+  });
 
   @override
-  String toString() {
-    return 'Module $module have cycle dependency';
-  }
+  String toString() => 'Module $module has a cyclic dependency';
 }

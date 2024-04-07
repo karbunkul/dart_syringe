@@ -1,4 +1,4 @@
-library syringe;
+library;
 
 export 'src/errors/errors.dart';
 export 'src/injector.dart';

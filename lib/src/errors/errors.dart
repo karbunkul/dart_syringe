@@ -1,4 +1,4 @@
-library syringe_errors;
+library;
 
 part 'cycle_dependency_error.dart';
 part 'dependency_export_error.dart';

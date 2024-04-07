@@ -1,3 +1,3 @@
-## 1.0.0
+## 0.9.7-pre
 
-- Initial version.
+- Create dependency instance from modules.

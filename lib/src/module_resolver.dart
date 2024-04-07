@@ -1,16 +1,22 @@
+import 'package:meta/meta.dart';
+import 'package:syringe/src/errors/errors.dart';
 import 'package:syringe/src/module.dart';
 
-import 'errors/errors.dart';
-
-final class ModuleResolver {
+/// Class responsible for resolving module dependencies.
+@immutable
+@internal
+class ModuleResolver {
+  /// List of modules to be resolved.
   final List<Module> modules;
 
+  /// Constructor for ModuleResolver.
   const ModuleResolver(this.modules);
 
+  /// Resolves module dependencies and returns a sorted list.
   List<Module> resolve() {
     final weights = _weights();
 
-    // sorted all modules by weight
+    // Sorts all modules by weight.
     final sortedDeps = List<Module>.from(modules);
     sortedDeps.sort((a, b) {
       final aWeight = weights[a.typeOf()]!;
@@ -29,6 +35,7 @@ final class ModuleResolver {
     return sortedDeps;
   }
 
+  /// Calculates weights for modules based on their dependencies.
   Map<Type, int> _weights() {
     final result = <Type, int>{};
     for (final module in modules) {
@@ -52,6 +59,7 @@ final class ModuleResolver {
     });
   }
 
+  /// Recursively walks through module dependencies.
   List<Type> _walk({
     required Module module,
     List<Type>? results,
