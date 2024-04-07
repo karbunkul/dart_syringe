@@ -92,7 +92,7 @@ class Foo {
   const Foo({required this.bar});
 }
 
-/// Module for creating Bar instances.
+/// Module for creating Bar instance.
 final class BarModule extends Module<Bar> {
   const BarModule();
 
