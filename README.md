@@ -67,6 +67,7 @@ Future<void> main() async {
   print(dependency.foo.bar.title);
 }
 
+```
 ## SyringeApi
 
 `SyringeApi` allows you to create new instances of objects (like ViewModels or Factories) dynamically during the `onInject` phase. It acts as a controlled Service Locator that only sees **exported** dependencies.
@@ -90,6 +91,7 @@ final result = await Injector<String>(
 
 > **Note:** `SyringeApi` will throw `SyringeMissingDependencyError` if you try to access a dependency that was not marked as `export: true` in its module. ⚠️
 
+```dart
 /// Class representing a dependency.
 class Dependency {
   final Foo foo;
