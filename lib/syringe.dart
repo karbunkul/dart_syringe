@@ -5,3 +5,4 @@ export 'src/injector.dart';
 export 'src/module.dart';
 export 'src/progress_info.dart';
 export 'src/types.dart' show InjectCallback, ProgressCallback, DepsCallback;
+export 'src/syringe_api.dart';
