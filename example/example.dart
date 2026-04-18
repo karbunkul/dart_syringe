@@ -50,31 +50,26 @@ class Dependency {
 
   /// Factory method to create Dependency instances.
   static Dependency onInject(DepsCallback deps) {
-    final api = deps<SyringeApi>();
+    final factory = deps<SyringeFactory>();
 
-    final barInstance = api.createFactory<Foo>(
-      deps: [Bar],
-      onFactory: (factory) => Foo(bar: factory<Bar>()),
-    );
-
-    return Dependency(foo: deps<Foo>(), blocs: Blocs(api: api));
+    return Dependency(foo: deps<Foo>(), blocs: Blocs(factory: factory));
   }
 
   const Dependency({required this.foo, required this.blocs});
 }
 
 final class Blocs {
-  final SyringeApi _api;
+  final SyringeFactory _factory;
 
   Foo foo() {
-    return _api.createFactory<Foo>(
+    return _factory.create<Foo>(
         deps: [Bar],
         onFactory: (factory) {
           return Foo(bar: factory<Bar>());
         });
   }
 
-  Blocs({required SyringeApi api}) : _api = api;
+  Blocs({required SyringeFactory factory}) : _factory = factory;
 }
 
 /// Class representing a Bar instance.
