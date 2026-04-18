@@ -1,13 +1,13 @@
 # Syringe 💉
 
-Syringe is a dependency injection (DI) library for Dart applications.
+Syringe is a dependency injection (DI) library for Dart applications. 🚀
 
 ## Features ✨
 
 - **Dependency Injection**: Easily manage dependencies in your Dart applications using a flexible and intuitive API. 🛠️
 - **Service Locator**: Utilize a service locator pattern for creating and resolving objects with dependencies. 🔍
 - **Module Visibility**: Organize your dependencies into modules with customizable visibility settings. 🔒
-- **SyringeApi (Dynamic Factories)**: Create new instances of objects on-the-fly using dependencies from the graph while respecting privacy rules. ⚡
+- **SyringeFactory (Dynamic Factories)**: Create new instances of objects on-the-fly using dependencies from the graph while respecting privacy rules. ⚡
 - **Cyclic Dependency Detection**: Detect and prevent cyclic dependencies to ensure the stability of your application. 🔄
 - **Testable Code**: Improve the testability of your codebase by decoupling components and mocking dependencies. 🧪
 
@@ -66,20 +66,20 @@ Future<void> main() async {
   // Print title of the Bar instance associated with Foo.
   print(dependency.foo.bar.title);
 }
-
 ```
-## SyringeApi
 
-`SyringeApi` allows you to create new instances of objects (like ViewModels or Factories) dynamically during the `onInject` phase. It acts as a controlled Service Locator that only sees **exported** dependencies.
+## SyringeFactory ⚡
+
+`SyringeFactory` allows you to create new instances of objects (like ViewModels or Factories) dynamically during the `onInject` phase. It acts as a controlled Service Locator that only sees **exported** dependencies.
 
 ```dart
 final result = await Injector<String>(
   modules: [FooModule()], // Assuming Foo is exported
   onInject: (deps) {
-    final api = deps<SyringeApi>();
+    final factory = deps<SyringeFactory>();
 
     // Create a new instance dynamically
-    final myDynamicService = api.createFactory(
+    final myDynamicService = factory.create(
       deps: [Foo],
       onFactory: (factory) => MyDynamicService(factory<Foo>()),
     );
@@ -89,7 +89,7 @@ final result = await Injector<String>(
 ).inject();
 ```
 
-> **Note:** `SyringeApi` will throw `SyringeMissingDependencyError` if you try to access a dependency that was not marked as `export: true` in its module. ⚠️
+> **Note:** `SyringeFactory` will throw `SyringeMissingDependencyError` if you try to access a dependency that was not marked as `export: true` in its module. ⚠️
 
 ```dart
 /// Class representing a dependency.

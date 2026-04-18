@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:syringe/src/errors/errors.dart';
-import 'package:syringe/src/syringe_api.dart';
+import 'package:syringe/src/syringe_factory.dart';
 import 'package:syringe/src/types.dart';
 
 /// Enum representing the mode of injection.
@@ -34,14 +34,14 @@ class InjectContext {
 
   /// Method to retrieve dependencies.
   T deps<T>() {
-    // SyringeApi is only available in inject mode and is provided automatically.
-    // We filter _deps to ensure only exported dependencies are accessible via SyringeApi.
-    if (mode == InjectMode.inject && T == SyringeApi) {
-      return _deps.putIfAbsent(SyringeApi, () {
+    // SyringeFactory is only available in inject mode and is provided automatically.
+    // We filter _deps to ensure only exported dependencies are accessible via SyringeFactory.
+    if (mode == InjectMode.inject && T == SyringeFactory) {
+      return _deps.putIfAbsent(SyringeFactory, () {
             final publicDeps = Map<Type, dynamic>.fromEntries(
               _deps.entries.where((e) => dependencies.contains(e.key)),
             );
-            return SyringeApi(deps: publicDeps);
+            return SyringeFactory(deps: publicDeps);
           })
           as T;
     }

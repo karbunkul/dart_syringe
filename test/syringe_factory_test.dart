@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 import 'package:syringe/syringe.dart';
-import 'package:syringe/src/syringe_api.dart';
+import 'package:syringe/src/syringe_factory.dart';
 
 class ServiceA {}
 
@@ -39,19 +39,19 @@ class ModuleC extends Module<ServiceC> {
 class BuggyModule extends Module<String> {
   @override
   Future<String> factory(DepsCallback deps) async {
-    deps<SyringeApi>(); // Should throw
+    deps<SyringeFactory>(); // Should throw
     return 'bug';
   }
 }
 
 void main() {
-  group('SyringeApi Tests', () {
-    test('SyringeApi should be available in onInject', () async {
+  group('SyringeFactory Tests', () {
+    test('SyringeFactory should be available in onInject', () async {
       final injector = Injector<bool>(
         modules: [ModuleA()],
         onInject: (deps) {
-          final api = deps<SyringeApi>();
-          expect(api, isA<SyringeApi>());
+          final factory = deps<SyringeFactory>();
+          expect(factory, isA<SyringeFactory>());
           return true;
         },
       );
@@ -61,15 +61,15 @@ void main() {
     });
 
     test(
-      'SyringeApi.createFactory should resolve dependencies correctly',
+      'SyringeFactory.create should resolve dependencies correctly',
       () async {
         final injector = Injector<ServiceB>(
           modules: [ModuleA()],
           onInject: (deps) {
-            final api = deps<SyringeApi>();
+            final factory = deps<SyringeFactory>();
 
-            // Dynamically create ServiceB using SyringeApi
-            return api.createFactory(
+            // Dynamically create ServiceB using SyringeFactory
+            return factory.create(
               deps: [ServiceA],
               onFactory: (factory) => ServiceB(factory<ServiceA>()),
             );
@@ -83,19 +83,19 @@ void main() {
     );
 
     test(
-      'SyringeApi.createFactory should produce different instances when called multiple times',
+      'SyringeFactory.create should produce different instances when called multiple times',
       () async {
         final injector = Injector<void>(
           modules: [ModuleA()],
           onInject: (deps) {
-            final api = deps<SyringeApi>();
+            final factory = deps<SyringeFactory>();
 
-            final instance1 = api.createFactory(
+            final instance1 = factory.create(
               deps: [ServiceA],
               onFactory: (factory) => ServiceB(factory<ServiceA>()),
             );
 
-            final instance2 = api.createFactory(
+            final instance2 = factory.create(
               deps: [ServiceA],
               onFactory: (factory) => ServiceB(factory<ServiceA>()),
             );
@@ -113,15 +113,15 @@ void main() {
     );
 
     test(
-      'SyringeApi should respect dependency privacy (export: false)',
+      'SyringeFactory should respect dependency privacy (export: false)',
       () async {
         final injector = Injector<void>(
           modules: [ModuleC()],
           onInject: (deps) {
-            final api = deps<SyringeApi>();
+            final factory = deps<SyringeFactory>();
 
             expect(
-              () => api.createFactory(
+              () => factory.create(
                 deps: [ServiceC],
                 onFactory: (factory) => factory<ServiceC>(),
               ),
@@ -135,15 +135,15 @@ void main() {
     );
 
     test(
-      'SyringeApi should throw if required dependency is not declared in createFactory',
+      'SyringeFactory should throw if required dependency is not declared in create',
       () async {
         final injector = Injector<void>(
           modules: [ModuleA()],
           onInject: (deps) {
-            final api = deps<SyringeApi>();
+            final factory = deps<SyringeFactory>();
 
             expect(
-              () => api.createFactory(
+              () => factory.create(
                 deps: [], // Empty deps, but trying to get ServiceA
                 onFactory: (factory) => factory<ServiceA>(),
               ),
@@ -157,7 +157,7 @@ void main() {
     );
 
     test(
-      'SyringeApi should not be available inside modules (InjectMode.module)',
+      'SyringeFactory should not be available inside modules (InjectMode.module)',
       () async {
         final injector = Injector<String>(
           modules: [BuggyModule()],
