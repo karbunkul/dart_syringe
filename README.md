@@ -1,27 +1,28 @@
-# Syringe
+# Syringe 💉
 
-Syringe is a dependency injection (DI) library for Dart applications.
+Syringe is a dependency injection (DI) library for Dart applications. 🚀
 
-## Features
+## Features ✨
 
-- **Dependency Injection**: Easily manage dependencies in your Dart applications using a flexible and intuitive API.
-- **Service Locator**: Utilize a service locator pattern for creating and resolving objects with dependencies.
-- **Module Visibility**: Organize your dependencies into modules with customizable visibility settings.
-- **Cyclic Dependency Detection**: Detect and prevent cyclic dependencies to ensure the stability of your application.
-- **Testable Code**: Improve the testability of your codebase by decoupling components and mocking dependencies.
+- **Dependency Injection**: Easily manage dependencies in your Dart applications using a flexible and intuitive API. 🛠️
+- **Service Locator**: Utilize a service locator pattern for creating and resolving objects with dependencies. 🔍
+- **Module Visibility**: Organize your dependencies into modules with customizable visibility settings. 🔒
+- **SyringeFactory (Dynamic Factories)**: Create new instances of objects on-the-fly using dependencies from the graph while respecting privacy rules. ⚡
+- **Cyclic Dependency Detection**: Detect and prevent cyclic dependencies to ensure the stability of your application. 🔄
+- **Testable Code**: Improve the testability of your codebase by decoupling components and mocking dependencies. 🧪
 
-## Installation
+## Installation 📦
 
 To use Syringe in your Dart project, add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  syringe: ^0.9.7-pre
+  syringe: ^0.9.8
 ```
 
-Then, run dart pub get to install the package.
+Then, run `dart pub get` to install the package. 📥
 
-## Usage
+## Usage 💡
 
 ```dart
 import 'dart:async';
@@ -65,7 +66,32 @@ Future<void> main() async {
   // Print title of the Bar instance associated with Foo.
   print(dependency.foo.bar.title);
 }
+```
 
+## SyringeFactory ⚡
+
+`SyringeFactory` allows you to create new instances of objects (like ViewModels or Factories) dynamically during the `onInject` phase. It acts as a controlled Service Locator that only sees **exported** dependencies.
+
+```dart
+final result = await Injector<String>(
+  modules: [FooModule()], // Assuming Foo is exported
+  onInject: (deps) {
+    final factory = deps<SyringeFactory>();
+
+    // Create a new instance dynamically
+    final myDynamicService = factory.create(
+      deps: [Foo],
+      onFactory: (factory) => MyDynamicService(factory<Foo>()),
+    );
+
+    return myDynamicService.doWork();
+  },
+).inject();
+```
+
+> **Note:** `SyringeFactory` will throw `SyringeMissingDependencyError` if you try to access a dependency that was not marked as `export: true` in its module. ⚠️
+
+```dart
 /// Class representing a dependency.
 class Dependency {
   final Foo foo;
@@ -108,10 +134,10 @@ final class BarModule extends Module<Bar> {
 }
 ```
 
-## Contributing
+## Contributing 🤝
 
-We welcome contributions to the project! If you have any suggestions for improvements or if you find any bugs, please contribute.
+We welcome contributions to the project! If you have any suggestions for improvements or if you find any bugs, please contribute. 💎
 
-## License
+## License 📄
 
 This project is licensed under the terms of the MIT License.
